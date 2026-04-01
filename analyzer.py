@@ -5,7 +5,13 @@ def analyze_packets(packets):
     Groups and summarizes captured packets into statistics.
     Returns: DataFrame, summary dict, and protocol distribution dict.
     """
-    df = pd.DataFrame(packets)
+    if not packets:
+        return pd.DataFrame(), {}, {}
+        
+    # Thread-safe snapshot to avoid list mutation during DataFrame creation
+    packets_snapshot = list(packets)
+    df = pd.DataFrame(packets_snapshot)
+    
     if df.empty:
         return df, {}, {}
 
